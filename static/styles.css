@@ -52,3 +52,26 @@ main img
     /* constrain images on small screens */
     max-width: 100%;
 }
+
+main div div #menu {
+    width: 320px;
+    margin-bottom: 70px;
+}
+
+main div div #menu a {
+    display: block;
+    background: #ccc;
+    color: #000;
+    padding: 10px 0;
+    text-align: center;
+    margin-bottom: 2px;
+}
+
+main div div #menu label {
+    display: block;
+    background: #ccc;
+    color: #000;
+    padding: 10px 0;
+    text-align: center;
+    margin-bottom: 2px;
+}

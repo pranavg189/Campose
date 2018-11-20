@@ -38,6 +38,11 @@ def index():
         """Display UI to capture an image"""
         return render_template("capture.html")
 
+@app.route('/display')
+def display():
+    images = CameraImage.query.order_by(CameraImage.id.desc()).all()
+    return render_template("display.html", images=images)
+
 """Run this block of code to create the initial tables for the model"""
 def main():
     db.create_all()
