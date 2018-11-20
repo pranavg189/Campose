@@ -5,12 +5,40 @@
 {% endblock %}
 
 {% block main %}
-<video id="camera" width=320 height=240 controls autoplay>Camera stream</video>
-<button type="button" id="capturebutton" class="btn btn-primary">Capture Image</button>
-<canvas class="camera-image" id="canvas" width=320 height=240></canvas><br>
-<label id="location">GPS Co-ordinates</label><br>
-<label><a id="imageurl">Image URL</a></label><br>
-<label id="status">Server Status</label>
+
+  <div class="row">
+    <div class="col-sm">
+      <video id="camera" width=320 height=240 controls autoplay>Camera stream</video>
+    </div>
+    <div class="col-sm">
+    </div>
+    <div class="col-sm">
+      <canvas class="camera-image" id="canvas" width=320 height=240></canvas>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm">
+      <label> Camera Feed </label>
+    </div>
+    <div class="col-sm">
+    </div>
+    <div class="col-sm">
+      <label id="location">GPS Co-ordinates</label><br>
+      <label><a id="imageurl">Image URL</a></label><br>
+      <label id="status">Server Status</label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm">
+    </div>
+    <div class="col-sm">
+      <button type="button" id="capturebutton" class="btn btn-primary">Capture Image</button>
+    </div>
+    <div class="col-sm">
+    </div>
+  </div>
 
 <script>
   const camera = document.getElementById('camera');
