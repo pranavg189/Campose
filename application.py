@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, flash
 from models import *
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -41,6 +41,12 @@ def index():
 @app.route('/display')
 def display():
     images = CameraImage.query.order_by(CameraImage.id.desc()).all()
+
+    if len(images) == 0:
+        flash("No captured images found !")
+    else:
+        flash("Showing all captured images......")
+
     return render_template("display.html", images=images)
 
 """Run this block of code to create the initial tables for the model"""
