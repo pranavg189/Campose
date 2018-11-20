@@ -16,9 +16,9 @@ app.secret_key = "super secret key"
 db.init_app(app)
 
 @app.route('/', methods=["GET", "POST"])
-def index():
+def capture():
+    """Display UI to capture/save an image"""
     if request.method == "POST":
-
         try:
             imgur_id = request.values.get("imageID")
             latitude = request.values.get("latitude")
@@ -29,17 +29,17 @@ def index():
 
             db.session.add(image)
             db.session.commit()
+
         except Exception as e:
             return apology("An error occured....")
 
-        # add try catch statement to catch any errors if possible and return apology message
         return 'OK'
     else:
-        """Display UI to capture an image"""
         return render_template("capture.html")
 
 @app.route('/display')
 def display():
+    """Display all captured images"""
     images = CameraImage.query.order_by(CameraImage.id.desc()).all()
 
     if len(images) == 0:
@@ -49,8 +49,8 @@ def display():
 
     return render_template("display.html", images=images)
 
-"""Run this block of code to create the initial tables for the model"""
 def main():
+    """Create initial database tables"""
     db.create_all()
 
 if __name__ == "__main__":

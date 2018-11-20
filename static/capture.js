@@ -6,6 +6,7 @@ const imageUrlLabel = document.getElementById("imageurl");
 const gpsLabel = document.getElementById("location");
 const statusLabel = document.getElementById("status")
 
+/* Message to display on blank canvas */
 context.font = "20px Arial";
 context.fillText("Please capture an image !", 45, 120)
 
@@ -19,7 +20,7 @@ navigator.mediaDevices.getUserMedia(constraints)
 });
 
 captureButton.addEventListener('click', () => {
-  /* Draw Image */
+  /* Draw captured image on canvas */
   context.clearRect(0, 0, canvas.width, canvas.height);
   context.drawImage(camera, 0, 0, canvas.width, canvas.height)
 
