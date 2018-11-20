@@ -31,7 +31,20 @@
     /* Draw Image */
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.drawImage(camera, 0, 0, canvas.width, canvas.height)
-    
+
+    /* Get the image in Base64 encoding and skip header part */
+    var imageBase64 = canvas.toDataURL().slice(22);
+
+    /* Send image in base64 format to flask server */
+    $.post("/",
+    {
+      imageBase64 : imageBase64
+    }).done( () => {
+      console.log('Image sent to the server');
+    }).fail( () => {
+      console.log('Could not send data to server');
+    });
+
   });
 
 
