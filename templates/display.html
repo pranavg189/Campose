@@ -14,7 +14,7 @@
         <div id="menu">
           <img src="{{"https://i.imgur.com/" ~ column.imgur_id ~ ".png"}}">
           <label>ID: {{column.imgur_id}}</label>
-          <label>Creation Date: {{column.creation_date}}</label>
+          <label>Creation Date: {{moment(column.creation_date).format('Do MMM YYYY h:mm:ss A')}}</label>
           <label>Longitude: {{column.longitude}}</label>
           <label>Latitude: {{column.latitude}}</label>
         </div>

@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, flash
 from models import *
+from flask_moment import Moment
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
+moment = Moment(app)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///' + os.path.join(basedir, 'urlinfo.db')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
