@@ -9,6 +9,7 @@
 <button type="button" id="capturebutton" class="btn btn-primary">Capture Image</button>
 <canvas class="camera-image" id="canvas" width=320 height=240></canvas>
 <label id="location">GPS Co-ordinates</label>
+<label><a id="imageurl">Image URL</a></label>
 
 <script>
   const camera = document.getElementById('camera');
@@ -16,6 +17,7 @@
   const context = canvas.getContext('2d');
   const captureButton = document.getElementById('capturebutton');
   const gpsLabel = document.getElementById("location");
+  const imageUrlLabel = document.getElementById("imageurl");
 
   context.font = "20px Arial";
   context.fillText("Please capture an image !", 45, 120)
@@ -37,6 +39,29 @@
     /* Get the image in Base64 encoding and skip header part */
     var imageBase64 = canvas.toDataURL().slice(22);
 
+    /* Upload the image to imgur */
+    $.ajax({
+      url: "https://api.imgur.com/3/image",
+      type: "POST",
+      datatype: "json",
+      headers: {
+        "Authorization": "Client-ID f58da3baf47229c",
+        "Authorization" : "Bearer 80dc58f5739f9a81270e0c460e3801a729b78d2b"
+      },
+      data: {
+        "image": imageBase64
+      }
+    }).done( response => {
+      console.log("https://imgur.com/" + response.data.id + ".png");
+
+      url = "https://imgur.com/" + response.data.id
+      imageUrlLabel.innerHTML = url
+      imageUrlLabel.setAttribute("href", url)
+      
+    }).fail( () => {
+      console.log('Image upload to Imgur failed');
+    });
+
     /* Get location */
     navigator.geolocation.getCurrentPosition( position => {
 
@@ -45,7 +70,7 @@
       const longitude = position.coords.longitude
 
       gpsLabel.innerHTML = latitude + ", " + longitude;
-      
+
     });
 
 
