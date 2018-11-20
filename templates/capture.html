@@ -6,9 +6,17 @@
 
 {% block main %}
 <video id="camera" width=320 height=240 controls autoplay>Camera stream</video>
+<button type="button" id="capturebutton" class="btn btn-primary">Capture Image</button>
+<canvas class="camera-image" id="canvas" width=320 height=240></canvas>
 
 <script>
   const camera = document.getElementById('camera');
+  const canvas = document.getElementById('canvas');
+  const context = canvas.getContext('2d');
+  const captureButton = document.getElementById('capturebutton');
+
+  context.font = "20px Arial";
+  context.fillText("Please capture an image !", 45, 120)
 
   const constraints = {
     video : true
@@ -18,5 +26,14 @@
     .then((stream) => {
     camera.srcObject = stream;
   });
+
+  captureButton.addEventListener('click', () => {
+    /* Draw Image */
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(camera, 0, 0, canvas.width, canvas.height)
+    
+  });
+
+
 </script>
 {% endblock %}

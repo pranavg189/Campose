@@ -21,3 +21,10 @@ nav .navbar-brand .green
 {
     color: #2e944b;
 }
+
+main .camera-image
+{
+  border-style: solid;
+  border-width: small;
+  border-color: black;
+}
