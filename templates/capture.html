@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Capture
+{% endblock %}
+
+{% block main %}
+<video id="camera" width=320 height=240 controls autoplay>Camera stream</video>
+
+<script>
+  const camera = document.getElementById('camera');
+
+  const constraints = {
+    video : true
+  };
+
+  navigator.mediaDevices.getUserMedia(constraints)
+    .then((stream) => {
+    camera.srcObject = stream;
+  });
+</script>
+{% endblock %}
