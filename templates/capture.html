@@ -8,12 +8,14 @@
 <video id="camera" width=320 height=240 controls autoplay>Camera stream</video>
 <button type="button" id="capturebutton" class="btn btn-primary">Capture Image</button>
 <canvas class="camera-image" id="canvas" width=320 height=240></canvas>
+<label id="location">GPS Co-ordinates</label>
 
 <script>
   const camera = document.getElementById('camera');
   const canvas = document.getElementById('canvas');
   const context = canvas.getContext('2d');
   const captureButton = document.getElementById('capturebutton');
+  const gpsLabel = document.getElementById("location");
 
   context.font = "20px Arial";
   context.fillText("Please capture an image !", 45, 120)
@@ -34,6 +36,18 @@
 
     /* Get the image in Base64 encoding and skip header part */
     var imageBase64 = canvas.toDataURL().slice(22);
+
+    /* Get location */
+    navigator.geolocation.getCurrentPosition( position => {
+
+
+      const latitude = position.coords.latitude
+      const longitude = position.coords.longitude
+
+      gpsLabel.innerHTML = latitude + ", " + longitude;
+      
+    });
+
 
     /* Send image in base64 format to flask server */
     $.post("/",

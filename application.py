@@ -10,6 +10,8 @@ def index():
 
         with open('image.png', 'wb') as image_file:
             image_file.write(base64.b64decode(image_data))
+
+        return 'OK'
     else:
         """Display UI to capture an image"""
         return render_template("capture.html")
