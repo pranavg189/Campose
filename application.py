@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request
 from models import *
 
+basedir = os.path.abspath(os.path.dirname(__file__))
+
 app = Flask(__name__)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///' + os.path.join(basedir, 'urlinfo.db')
@@ -16,11 +18,21 @@ db.init_app(app)
 @app.route('/', methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-        image_data = request.values.get("imageBase64")
 
-        with open('image.png', 'wb') as image_file:
-            image_file.write(base64.b64decode(image_data))
+        try:
+            imgur_id = request.values.get("imageID")
+            latitude = request.values.get("latitude")
+            longitude = request.values.get("longitude")
 
+            # save image path along with latitude longitude in the database
+            image = CameraImage(imgur_id=imgur_id, latitude=latitude, longitude=longitude)
+
+            db.session.add(image)
+            db.session.commit()
+        except Exception as e:
+            return apology("An error occured....")
+
+        # add try catch statement to catch any errors if possible and return apology message
         return 'OK'
     else:
         """Display UI to capture an image"""

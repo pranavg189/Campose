@@ -7,9 +7,10 @@
 {% block main %}
 <video id="camera" width=320 height=240 controls autoplay>Camera stream</video>
 <button type="button" id="capturebutton" class="btn btn-primary">Capture Image</button>
-<canvas class="camera-image" id="canvas" width=320 height=240></canvas>
-<label id="location">GPS Co-ordinates</label>
-<label><a id="imageurl">Image URL</a></label>
+<canvas class="camera-image" id="canvas" width=320 height=240></canvas><br>
+<label id="location">GPS Co-ordinates</label><br>
+<label><a id="imageurl">Image URL</a></label><br>
+<label id="status">Server Status</label>
 
 <script>
   const camera = document.getElementById('camera');
@@ -18,6 +19,7 @@
   const captureButton = document.getElementById('capturebutton');
   const gpsLabel = document.getElementById("location");
   const imageUrlLabel = document.getElementById("imageurl");
+  const statusLabel = document.getElementById("status")
 
   context.font = "20px Arial";
   context.fillText("Please capture an image !", 45, 120)
@@ -39,50 +41,60 @@
     /* Get the image in Base64 encoding and skip header part */
     var imageBase64 = canvas.toDataURL().slice(22);
 
-    /* Upload the image to imgur */
-    $.ajax({
-      url: "https://api.imgur.com/3/image",
-      type: "POST",
-      datatype: "json",
-      headers: {
-        "Authorization": "Client-ID f58da3baf47229c",
-        "Authorization" : "Bearer 80dc58f5739f9a81270e0c460e3801a729b78d2b"
-      },
-      data: {
-        "image": imageBase64
-      }
-    }).done( response => {
-      console.log("https://imgur.com/" + response.data.id + ".png");
+      /* Upload the image to imgur */
+      $.ajax({
+        url: "https://api.imgur.com/3/image",
+        type: "POST",
+        datatype: "json",
+        headers: {
+          "Authorization": "Client-ID f58da3baf47229c",
+          "Authorization" : "Bearer 80dc58f5739f9a81270e0c460e3801a729b78d2b"
+        },
+        data: {
+          "image": imageBase64
+        }
+      }).done( response => {
 
-      url = "https://imgur.com/" + response.data.id
-      imageUrlLabel.innerHTML = url
-      imageUrlLabel.setAttribute("href", url)
-      
-    }).fail( () => {
-      console.log('Image upload to Imgur failed');
-    });
+        url = "https://imgur.com/" + response.data.id
+        imageUrlLabel.innerHTML = url
+        imageUrlLabel.setAttribute("href", url)
 
-    /* Get location */
-    navigator.geolocation.getCurrentPosition( position => {
+        console.log(response.data.id);
+
+        /* Get location */
+        navigator.geolocation.getCurrentPosition( position => {
 
 
-      const latitude = position.coords.latitude
-      const longitude = position.coords.longitude
+          const latitude = position.coords.latitude
+          const longitude = position.coords.longitude
 
-      gpsLabel.innerHTML = latitude + ", " + longitude;
+          gpsLabel.innerHTML = latitude + ", " + longitude;
 
-    });
+          /* Send image and its metadata to flask server */
+          $.post("/",
+          {
+            imageID : response.data.id,
+            latitude : latitude,
+            longitude : longitude
+          }).done( () => {
+            console.log('Image data stored in the database');
+            statusLabel.innerHTML = "Save successful for Image ID: "  + response.data.id;
+          }).fail( () => {
+            console.log('Could not send data to server');
+            statusLabel.innerHTML = "Unable to send data to server for Image ID: "  + response.data.id;
+          });
 
+        }, error => {
+          console.log('Unable to get the GPS Co-ordinates');
+          gpsLabel.innerHTML = "Error";
+          statusLabel.innerHTML = "Unable to get the GPS Co-ordinates";
+        });
 
-    /* Send image in base64 format to flask server */
-    $.post("/",
-    {
-      imageBase64 : imageBase64
-    }).done( () => {
-      console.log('Image sent to the server');
-    }).fail( () => {
-      console.log('Could not send data to server');
-    });
+      }).fail( () => {
+        console.log('Image upload to Imgur failed');
+        imageUrlLabel.innerHTML = "Error";
+        statusLabel.innerHTML = "Image upload to Imgur failed";
+      });
 
   });
 
